@@ -9,24 +9,47 @@ PresentAI is an interactive web application that acts as your personal Copilot t
 ## 🚀 Live Demo
 Experience the generator for yourself here: **[PresentAI on Render](https://ai-powerpoint-generator-t6tj.onrender.com)**
 
-## ✨ Key Features
-- **Prompt to Presentation**: Just drop in a topic and select your desired length, and the AI will extrapolate an entire presentation flow.
-- **Target Audience Tuning**: Natively tailor the vocabulary, complexity, and tone of your slides by choosing between *Professional*, *Academic*, *Casual*, or *Investor* audiences.
-- **Editable Outlines**: Unlike rigid "one-shot" generators, PresentAI lets you intercept the generation process. Review, tweak, and perfect the AI's slide titles, bullet points, and slide formats (content vs. image) *before* the `.pptx` file is permanently compiled.
-- **Automated Visuals**: The system autonomously generates image search parameters based on contextual slide content and fetches beautiful, royalty-free stock imagery (via Pexels/Unsplash keys) to embed right into your slides.
-- **Native Export**: Downloads strictly as a customizable Microsoft `.pptx` file, meaning you still retain full layout control in PowerPoint after the fact.
+---
+
+## 🌟 What We Have Built
+This project evolved from a standard backend script into a full-fledged, interactive web application. Here are the major functionalities implemented:
+
+### 1. Interactive 3-Step Wizard Frontend
+- Fully transitioned the application to a slick **Streamlit** user interface.
+- Built a welcoming **Landing Page** (Step 0) to greet users before launching the presentation generation process.
+- Designed a step-by-step workflow preventing users from getting overwhelmed with too many options simultaneously.
+
+### 2. Live Outline Editing (Human-in-the-Loop)
+- **Intercepting the AI**: Unlike rigid generators that jump straight from prompt to download, an interactive review stage was introduced.
+- Using `st.data_editor`, you can freely modify the AI's generated outline. You can rewrite bullet points, tweak slide titles, add/remove slides entirely, or manually designate slides as "title," "content," or "image" slides.
+- **Backend Subclassing**: This was achieved without fundamentally rewriting the backend script (`ppt_generator.py`). Instead, the Streamlit frontend dynamically "subclasses" the `PPTGenerator` object to transparently inject your custom edits directly into the PowerPoint compile process!
+
+### 3. Dynamic Audience Targeting
+- Added an "Audience Selection" feature directly on the initial prompt screen (`Professional`, `Academic`, `Casual`, `Investors`).
+- The Python backend dynamically incorporates this parameter into the prompt structure, instructing Gemini to aggressively adjust complexity, tone, and formatting depending exactly on who will be watching the slide deck.
+
+### 4. Automated & Robust Data Parsing
+- **List Flattening**: Handled annoying edge cases where Gemini returns bullet points as Python `list` objects, dynamically filtering them into clean structural string formats so the table editor doesn't crash.
+- **Markdown Stripping**: Gemini frequently hallucinated bold asterisks (`**`) inside the raw text. The parser was fortified to strip these outright, guaranteeing the Microsoft PowerPoint text boxes look pristine and immediately readable. 
+
+### 5. Smart Image Embedding
+- Handled API communication with beautiful stock photography pools (Pexels / Unsplash). 
+- Using Gemini, the app reads your specific slide content and reverse-engineers a 5-word image search query, automatically downloading and cleanly embedding relevant contextual photography straight into your `.pptx` slides. 
+
+---
 
 ## 🛠️ Technology Stack
 - **Frontend / Interface**: [Streamlit](https://streamlit.io/)
 - **Core Engine**: Python 3
-- **AI Brain**: `google-generativeai` (Gemini 2.5 Flash)
+- **AI Brain**: `google-generativeai` (Gemini 2.5 Flash API)
 - **Document Rendering**: `python-pptx`
+- **Asset Fetching**: `requests` (Pexels/Unsplash)
 
 ## 💻 Running Locally
 
 ### Prerequisites
 1. You will need a functioning API Key from [Google AI Studio](https://aistudio.google.com/).
-2. *(Optional but Highly Recommended)* An API Key from [Pexels](https://www.pexels.com/api/) to circumvent Unsplash rate-limits for high-quality slide imagery.
+2. *(Optional but Highly Recommended)* An API Key from [Pexels](https://www.pexels.com/api/) to fetch higher quality slide imagery.
 
 ### Installation
 
@@ -53,6 +76,3 @@ Experience the generator for yourself here: **[PresentAI on Render](https://ai-p
    streamlit run app.py
    ```
    *Your browser will automatically open to `http://localhost:8501`.*
-
-## 🤝 Contributing
-Feel free to open issues or submit pull requests if you want to extend functionality (like adding new PPT templates, injecting custom fonts, or adding more LLM providers!).
