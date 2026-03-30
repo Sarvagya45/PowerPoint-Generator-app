@@ -1,0 +1,19 @@
+# Environments
+.env
+.venv/
+venv/
+env/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDEs
+.idea/
+.vscode/
+
+# Project Specific
+*.pptx
+*.ppt
+temp_image.jpg
